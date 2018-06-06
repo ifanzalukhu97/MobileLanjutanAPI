@@ -1,19 +1,20 @@
-let Account = function ({
-	norekening,
-	username,
-	nama,
-	email,
-	nohp,
-	pin,
-	saldo
-} = {}) {
-	this.norekening = norekening;
-	this.username = username;
-	this.nama = nama;
-	this.email = email;
-	this.nohp = nohp;
-	this.pin = pin;
-	this.saldo = saldo;
-}
+const Sequelize = require('sequelize')
+const sequelize = require('../config/Mysql')
 
-module.exports = Account;
+const Account = sequelize.define('account', {
+	norekening: {
+		type: Sequelize.STRING,
+		primaryKey: true
+	},
+	username: Sequelize.STRING,
+	nama: Sequelize.STRING,
+	email: Sequelize.STRING,
+	nohp: Sequelize.STRING,
+	pin: Sequelize.STRING,
+	saldo: Sequelize.INTEGER
+}, {
+	createdAt: false,
+	updatedAt: false,
+})
+
+module.exports = Account

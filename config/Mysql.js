@@ -1,11 +1,20 @@
-let mysql = require('mysql')
-let conn = mysql.createConnection({
+const Sequelize = require('sequelize')
+const sequelize = new Sequelize({
+	database: 'mobile_banking',
+	username: 'root',
+	password: null,
 	host: 'localhost',
-	user: 'root',
-	password: '',
-	database: 'mobile_banking'
+	dialect: 'mysql',
+	operatorsAliases: false
 })
 
-conn.connect()
+sequelize
+	.authenticate()
+	.then(() => {
+		console.log('Connection has been established succesfully.')
+	})
+	.catch(err => {
+		console.error('Unable to connect to database: ', err);
+	})
 
-module.exports = conn
+module.exports = sequelize
