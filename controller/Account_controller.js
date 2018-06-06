@@ -46,5 +46,23 @@ AccountCtrl.post('/ceksaldo', urlencodedParser, (req, res) => {
 	})
 })
 
+// Router untuk ganti pin
+AccountCtrl.put('/gantipin', urlencodedParser, (req, res) => {
+	var pinLama = req.body.pinlama
+	var pinBaru = req.body.pinbaru
+
+	Account.update({
+		pin: pinBaru
+	}, {
+		where: {
+			norekening: useraktif.norekening,
+			pin: pinLama
+		}
+	}).then(hasil => {
+		console.log(hasil)
+		res.send('update PIN berhasil')
+	})
+})
+
 
 module.exports = AccountCtrl
