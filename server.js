@@ -3,8 +3,10 @@ let app = express()
 const PORT = process.env.PORT || 5432
 
 let AccountRouter = require('./controller/Account_controller.js')
+let TransaksiRouter = require('./controller/Transaksi_controller')
 
-app.use(AccountRouter)
+app.use(AccountRouter.AccountCtrl)
+app.use(TransaksiRouter)
 
 app.get('/', (req, res) => {
 	res.send('Hallo Mahasiswa')

@@ -10,7 +10,7 @@ var urlencodedParser = bodyParser.urlencoded({
 
 let AccountCtrl = express.Router()
 var useraktif = {
-	norekening: undefined
+	norekening: 12
 }
 
 // Router untuk login account
@@ -64,5 +64,7 @@ AccountCtrl.put('/gantipin', urlencodedParser, (req, res) => {
 	})
 })
 
-
-module.exports = AccountCtrl
+module.exports = {
+	AccountCtrl: AccountCtrl,
+	useraktif: useraktif
+}

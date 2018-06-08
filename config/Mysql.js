@@ -11,10 +11,10 @@ const sequelize = new Sequelize({
 sequelize
 	.authenticate()
 	.then(() => {
-		console.log('Connection has been established succesfully.')
+		console.log('Berhasil terhubung ke database')
 	})
 	.catch(err => {
-		console.error('Unable to connect to database: ', err);
+		console.error('Gagal terhubung ke database: ', err);
 	})
 
 module.exports = sequelize
