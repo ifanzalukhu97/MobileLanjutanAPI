@@ -9,6 +9,7 @@ var AccountCtrl = require('./Account_controller')
 
 let Transaksi = require('../models/Transaksi')
 let Account = require('../models/Account')
+let Va = require('../models/VA')
 
 const sequelize = require('../config/Mysql')
 
@@ -20,12 +21,9 @@ let TransaksiCtrl = express.Router()
 
 // Router untuk tes/debug
 TransaksiCtrl.get('/tes', (req, res) => {
-	Transaksi.findAll({
-		attributes: ['id', 'nominal', 'jenis_transaksi'],
+	Va.findOne({
 		where: {
-			tanggal: {
-				[Op.like]: "2018-07%"
-			}
+			no_va: 1234567890
 		}
 	}).then(hasil => {
 		res.send(hasil)
@@ -96,6 +94,7 @@ TransaksiCtrl.post('/transfer', urlencodedParser, (req, res) => {
 	})
 })
 
+// Router untuk mutasi
 TransaksiCtrl.post('/mutasi', urlencodedParser, (req, res) => {
 	var norekening = AccountCtrl.useraktif.norekening
 	var pin = req.body.pin
@@ -114,5 +113,7 @@ TransaksiCtrl.post('/mutasi', urlencodedParser, (req, res) => {
 	})
 
 })
+
+
 
 module.exports = TransaksiCtrl

@@ -19,31 +19,44 @@ AccountCtrl.post('/login', urlencodedParser, (req, res) => {
 	var noHp = req.body.noHp
 
 	Account.findOne({
-		where: {
-			username: username,
-			nohp: noHp
-		}
-	}).then(hasil => {
+			where: {
+				username: username,
+				nohp: noHp
+			}
+		}).then(hasil => {
 
-		useraktif.norekening = hasil.norekening
-		res.json(hasil)
-	})
+			useraktif.norekening = hasil.norekening
+			hasil.dataValues["message"] = "ok"
+			res.json(hasil)
+		})
+		.catch(err => {
+			res.json({
+				"message": "failed"
+			})
+		})
 
 })
 
 // Router untuk cek saldo
 AccountCtrl.post('/ceksaldo', urlencodedParser, (req, res) => {
 	var pin = req.body.pin
+	var norekening = req.body.norekening
 
 	Account.findOne({
 		attributes: ['saldo'],
 		where: {
-			norekening: useraktif.norekening,
+			norekening: norekening,
 			pin: pin
 		}
 	}).then(hasil => {
+		hasil.dataValues["message"] = "ok"
 		res.json(hasil)
+	}).catch(err => {
+		res.json({
+			"message": "failed"
+		})
 	})
+
 })
 
 // Router untuk ganti pin
