@@ -96,24 +96,102 @@ TransaksiCtrl.post('/transfer', urlencodedParser, (req, res) => {
 
 // Router untuk mutasi
 TransaksiCtrl.post('/mutasi', urlencodedParser, (req, res) => {
-	var norekening = AccountCtrl.useraktif.norekening
+	var norekening = req.body.norekening
 	var pin = req.body.pin
 	var bulan = req.body.bulan
 
 	Transaksi.findAll({
-		attributes: ['id', 'nominal', 'jenis_transaksi'],
-		where: {
-			tanggal: {
+			attributes: ['id', 'tanggal', 'nominal', 'jenis_transaksi'],
+			where: {
+				tanggal: {
 				[Op.like]: `2018-${bulan}%`
-			},
-			no_rekening: norekening
-		}
-	}).then(hasil => {
-		res.send(hasil)
-	})
+				},
+				no_rekening: norekening
+			}
+		}).then(hasil => {
+			res.json(hasil)
+		})
+		.catch(err => {
+			res.send("error")
+		})
 
 })
 
+// Route cek nova
+TransaksiCtrl.post('/cekva', urlencodedParser, (req, res) => {
+	nova = parseInt(req.body.nova)
+
+	Va.findOne({
+			where: {
+				no_va: nova
+			}
+		}).then(hasil => {
+
+			if (hasil == null) {
+				res.json({
+					message: "kosong"
+				})
+			}
+
+			hasil.dataValues["message"] = "ok"
+			res.send(hasil)
+		})
+		.catch(err => {
+			res.json({
+				message: "error"
+			})
+		})
+
+})
+
+// Route transaksiva
+TransaksiCtrl.post('/transaksiva', urlencodedParser, (req, res) => {
+	var pin = req.body.pin
+	var norek = req.body.norek
+	var nominal = parseInt(req.body.nominal)
+	var nova = req.body.nova
+	var ket = req.body.ket
+	var tanggal = new Date().toJSON().slice(0, 10)
+
+	Account.findOne({
+		where: {
+			norekening: norek,
+			pin: pin
+		}
+	}).then(hasil => {
+
+		if (hasil !== null) {
+			Transaksi.create({
+				tanggal: tanggal,
+				nominal: nominal,
+				jenis_transaksi: ket + " VA " + nova,
+				no_rekening: norek
+			}).then(hasil => {
+				res.json({
+					// berhasil input ke table transaksi
+					message: "ok"
+				})
+			}).catch(err => {
+				res.json({
+					// gagal input ke table transaksi
+					message: "gagal"
+				})
+			})
+		} else {
+			console.log(hasil)
+			res.json({
+				// norek dan pin tidak sesuai
+				message: "kosong"
+			})
+		}
+	}).catch(err => {
+		res.json({
+			// format pin dan norek tidak sesuai
+			message: "error"
+		})
+	})
+
+})
 
 
 module.exports = TransaksiCtrl
